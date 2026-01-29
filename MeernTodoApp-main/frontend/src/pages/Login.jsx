@@ -3,19 +3,22 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
 import axios from "axios";
-import toast, { useToaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+
   // State to handle form inputs
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
   });
-  const navigate = useNavigate();
-  // const toast = useToaster();
+
+  // Backend base URL from environment variable
+  const API_URL = process.env.REACT_APP_API_URL;
 
   // Handle input changes
   const handleChange = (e) => {
@@ -29,7 +32,7 @@ const LoginForm = () => {
 
     try {
       let res = await axios.post(
-        "http://localhost:5000/api/users/login",
+        `${API_URL}/api/users/login`, // use environment variable
         formData,
         {
           headers: {
@@ -111,7 +114,10 @@ const LoginForm = () => {
           </Link>
         </p>
       </div>
-      <IoArrowBackCircleOutline className="text-white text-4xl absolute left-4 top-4 cursor-pointer" onClick={()=>navigate("/")} />
+      <IoArrowBackCircleOutline
+        className="text-white text-4xl absolute left-4 top-4 cursor-pointer"
+        onClick={() => navigate("/")}
+      />
     </div>
   );
 };

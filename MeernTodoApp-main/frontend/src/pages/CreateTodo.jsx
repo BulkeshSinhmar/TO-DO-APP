@@ -3,19 +3,21 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
 import axios from "axios";
-import toast, { useToaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
 const CreateTodo = () => {
     const navigate = useNavigate();
+
     // State to handle form inputs
     const [formData, setFormData] = useState({
         title: "",
         description: ""
     });
 
-    // const toast = useToaster();
+    // Backend base URL from environment variable
+    const API_URL = process.env.REACT_APP_API_URL;
 
     // Handle input changes
     const handleChange = (e) => {
@@ -28,7 +30,7 @@ const CreateTodo = () => {
         e.preventDefault();
         try {
             let res = await axios.post(
-                "http://localhost:5000/api/todo/create",
+                `${API_URL}/api/todo/create`, // use environment variable
                 formData,
                 {
                     headers: {
@@ -48,10 +50,14 @@ const CreateTodo = () => {
         } catch (error) {
             toast.error(error.message);
         }
+
+        // Reset form
         setFormData({ title: "", description: "" });
+
+        // Navigate to dashboard after 2 seconds
         setTimeout(() => {
             navigate("/dashboard");
-        },2000);
+        }, 2000);
     };
 
     return (
@@ -72,7 +78,7 @@ const CreateTodo = () => {
                         />
                     </div>
 
-                    {/* description */}
+                    {/* Description */}
                     <div className="flex flex-col">
                         <Label htmlFor="description" className="mb-2">Description</Label>
                         <Input
@@ -84,13 +90,18 @@ const CreateTodo = () => {
                             onChange={handleChange}
                         />
                     </div>
+
                     {/* Submit Button */}
                     <Button type="submit" className="w-full mt-4">
                         Create
                     </Button>
                 </form>
             </div>
-            <IoArrowBackCircleOutline className="text-white text-4xl absolute left-4 top-4 cursor-pointer" onClick={() => history.back()} />
+
+            <IoArrowBackCircleOutline
+                className="text-white text-4xl absolute left-4 top-4 cursor-pointer"
+                onClick={() => history.back()}
+            />
         </div>
     );
 };

@@ -3,10 +3,12 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
 import axios from "axios";
-import toast, { useToaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
+
   // State to handle form inputs
   const [formData, setFormData] = useState({
     fullName: "",
@@ -15,7 +17,8 @@ const RegisterForm = () => {
     password: "",
   });
 
-  const navigate = useNavigate();
+  // Backend base URL from environment variable
+  const API_URL = process.env.REACT_APP_API_URL;
 
   // Handle input changes
   const handleChange = (e) => {
@@ -29,7 +32,7 @@ const RegisterForm = () => {
 
     try {
       let res = await axios.post(
-        "http://localhost:5000/api/users/register",
+        `${API_URL}/api/users/register`, // use environment variable
         formData,
         {
           headers: {
@@ -53,7 +56,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className=" h-screen w-screen flex justify-center items-center">
+    <div className="h-screen w-screen flex justify-center items-center">
       <div className="max-w-md w-full mx-auto mt-10 p-6 bg-white shadow-xl shadow-gray-400 rounded-md">
         <h2 className="text-2xl font-bold text-center mb-4">Register</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -115,7 +118,7 @@ const RegisterForm = () => {
           </Button>
         </form>
         <p className="text-blue-800 text-center mt-2">
-          Already register ?{" "}
+          Already registered?{" "}
           <Link to="/login" className="text-blue-800 underline">
             login
           </Link>
